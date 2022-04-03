@@ -116,4 +116,5 @@ function callSendAPI(sender_psid, response) {
       }
     }
   );
+  console.log(request);
 }
