@@ -1,4 +1,7 @@
 "use strict";
+require("dotenv").config();
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+console.log(VERIFY_TOKEN);
 
 // Imports dependencies and set up http server
 const express = require("express"),
@@ -20,6 +23,10 @@ app.post("/webhook", (req, res) => {
       // will only ever contain one message, so we get index 0
       let webhook_event = entry.messaging[0];
       console.log(webhook_event);
+
+      // Get the sender PSID
+      let sender_psid = webhook_event.sender.id;
+      console.log("Sender PSID: " + sender_psid);
     });
 
     // Returns a '200 OK' response to all requests
@@ -33,7 +40,7 @@ app.post("/webhook", (req, res) => {
 // Adds support for GET requests to our webhook
 app.get("/webhook", (req, res) => {
   // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "<YOUR_VERIFY_TOKEN>";
+  // let VERIFY_TOKEN = "<YOUR_VERIFY_TOKEN>";
 
   // Parse the query params
   let mode = req.query["hub.mode"];
