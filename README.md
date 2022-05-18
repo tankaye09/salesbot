@@ -21,8 +21,6 @@ Make some changes to the code you just cloned and deploy them to Heroku using Gi
     $ git commit -am "make it better"
     $ git push heroku master
 
-You can now change your main deploy branch from "master" to "main" for both manual and automatic deploys, please follow the instructions here.
-
 ## To view logs
 
     $ heroku logs
