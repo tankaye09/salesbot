@@ -17,9 +17,9 @@ Use Git to clone salesbot-messenger's source code to your local machine.
 
 Make some changes to the code you just cloned and deploy them to Heroku using Git.
 
-$ git add .
-$ git commit -am "make it better"
-$ git push heroku master
+    $ git add .
+    $ git commit -am "make it better"
+    $ git push heroku master
 
 You can now change your main deploy branch from "master" to "main" for both manual and automatic deploys, please follow the instructions here.
 
