@@ -53,7 +53,7 @@ app.post("/webhook", (req, res) => {
     // Iterates over each entry - there may be multiple if batched
     body.entry.forEach(function (entry) {
       if (entry.messaging) {
-        // Receive message event
+        // RECEIVE MESSAGE EVENT
         // Gets the body of the webhook event
         let webhookEvent = entry.messaging[0];
         console.log(webhookEvent);
@@ -69,8 +69,13 @@ app.post("/webhook", (req, res) => {
         } else if (webhookEvent.postback) {
           handlePostback(senderPsid, webhookEvent.postback);
         }
+        if (webhookEvent.nlp.traits) {
+          for (const [key, value] of Object.entries(webhookEvent.nlp.traits)) {
+            console.log(`${key}: ${value}`);
+          }
+        }
       } else if (entry.changes[0].field === "feed") {
-        // Receive feed update event
+        // RECEIVE FEED UPDATE EVENT
         let updateValueObject = entry.changes[0].value;
         for (const [key, value] of Object.entries(updateValueObject)) {
           console.log(`${key}: ${value}`);
