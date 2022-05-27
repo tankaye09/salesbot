@@ -69,13 +69,6 @@ app.post("/webhook", (req, res) => {
         } else if (webhookEvent.postback) {
           handlePostback(senderPsid, webhookEvent.postback);
         }
-        if (webhookEvent.message.nlp.traits) {
-          for (const [key, value] of Object.entries(
-            webhookEvent.message.nlp.traits
-          )) {
-            console.log(`${key}: ${value}`);
-          }
-        }
       } else if (entry.changes[0].field === "feed") {
         // RECEIVE FEED UPDATE EVENT
         let updateValueObject = entry.changes[0].value;
@@ -142,6 +135,9 @@ function handleMessage(senderPsid, receivedMessage) {
         },
       },
     };
+  } else if (receivedMessage.nlp) {
+    const sentiment = firstTrait(receivedMessage.nlp, "wit$sentiment");
+    console.log(sentiment);
   }
 
   // Send the response message
