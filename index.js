@@ -69,8 +69,10 @@ app.post("/webhook", (req, res) => {
         } else if (webhookEvent.postback) {
           handlePostback(senderPsid, webhookEvent.postback);
         }
-        if (webhookEvent.nlp.traits) {
-          for (const [key, value] of Object.entries(webhookEvent.nlp.traits)) {
+        if (webhookEvent.message.nlp.traits) {
+          for (const [key, value] of Object.entries(
+            webhookEvent.message.nlp.traits
+          )) {
             console.log(`${key}: ${value}`);
           }
         }
