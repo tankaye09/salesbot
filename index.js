@@ -41,12 +41,6 @@ app.get("/webhook", (req, res) => {
       // Responds with '403 Forbidden' if verify tokens do not match
       res.sendStatus(403);
     }
-  } else {
-    // TEST THIS ON SEPARATE BRANCH
-
-    // GET a feed update and send a message to the user who posted or commented
-
-    console.log("REQ: " + req);
   }
 });
 
@@ -78,9 +72,17 @@ app.post("/webhook", (req, res) => {
     // Returns a '200 OK' response to all requests
     res.status(200).send("EVENT_RECEIVED");
   } else {
-    // Returns a '404 Not Found' if event is not from a page subscription
-    res.sendStatus(404);
+    // TEST THIS ON SEPARATE BRANCH
+
+    // GET a feed update and send a message to the user who posted or commented
+
+    console.log("REQ body: " + body);
   }
+
+  // else {
+  //   // Returns a '404 Not Found' if event is not from a page subscription
+  //   res.sendStatus(404);
+  // }
 });
 
 // Handles messages events
