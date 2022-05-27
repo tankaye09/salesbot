@@ -72,7 +72,7 @@ app.post("/webhook", (req, res) => {
       } else if (entry.changes[0].field === "feed") {
         // RECEIVE FEED UPDATE EVENT
         let updateValueObject = entry.changes[0].value;
-        printObjectFields(updateValueObject);
+        handleFeedUpdate(updateValueObject);
       }
     });
 
@@ -169,6 +169,10 @@ function handlePostback(senderPsid, receivedPostback) {
   }
   // Send the message to acknowledge the postback
   callSendAPI(senderPsid, response);
+}
+
+function handleFeedUpdate(feedUpdateObject) {
+  printObjectFields(feedUpdateObject);
 }
 
 // Sends response messages via the Send API
