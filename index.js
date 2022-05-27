@@ -135,9 +135,10 @@ function handleMessage(senderPsid, receivedMessage) {
         },
       },
     };
-  } else if (receivedMessage.nlp) {
+  }
+  if (receivedMessage.nlp) {
     const sentiment = firstTrait(receivedMessage.nlp, "wit$sentiment");
-    console.log(sentiment);
+    console.log("Sentiment: " + sentiment);
   }
 
   // Send the response message
