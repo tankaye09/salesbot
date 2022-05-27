@@ -72,9 +72,7 @@ app.post("/webhook", (req, res) => {
       } else if (entry.changes[0].field === "feed") {
         // RECEIVE FEED UPDATE EVENT
         let updateValueObject = entry.changes[0].value;
-        for (const [key, value] of Object.entries(updateValueObject)) {
-          console.log(`${key}: ${value}`);
-        }
+        printObjectFields(updateValueObject);
       }
     });
 
@@ -138,7 +136,8 @@ function handleMessage(senderPsid, receivedMessage) {
   }
   if (receivedMessage.nlp) {
     const sentiment = firstTrait(receivedMessage.nlp, "wit$sentiment");
-    console.log("Sentiment: " + sentiment);
+    console.log("Sentiment: ");
+    printObjectFields(sentiment);
   }
 
   // Send the response message
@@ -201,6 +200,12 @@ function callSendAPI(senderPsid, response) {
       }
     }
   );
+}
+
+function printObjectFields(object) {
+  for (const [key, value] of Object.entries(object)) {
+    console.log(`${key}: ${value}`);
+  }
 }
 
 // listen for requests :)
