@@ -145,6 +145,10 @@ function handleMessage(senderPsid, receivedMessage) {
   callSendAPI(senderPsid, response);
 }
 
+function firstTrait(nlp, name) {
+  return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
+}
+
 // Handles messaging_postbacks events
 // Postback Buttons send a messaging_postbacks event to the webhook
 // {
