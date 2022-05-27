@@ -41,6 +41,12 @@ app.get("/webhook", (req, res) => {
       // Responds with '403 Forbidden' if verify tokens do not match
       res.sendStatus(403);
     }
+  } else {
+    // TEST THIS ON SEPARATE BRANCH
+
+    // GET a feed update and send a message to the user who posted or commented
+
+    console.log("REQ: " + req);
   }
 });
 
@@ -125,6 +131,12 @@ function handleMessage(senderPsid, receivedMessage) {
 }
 
 // Handles messaging_postbacks events
+// Postback Buttons send a messaging_postbacks event to the webhook
+// {
+//  "type": "postback",
+//  "title": "<BUTTON_TEXT>",
+//  "payload": "<STRING_SENT_TO_WEBHOOK>"
+// }
 function handlePostback(senderPsid, receivedPostback) {
   let response;
 
