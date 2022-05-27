@@ -72,7 +72,9 @@ app.post("/webhook", (req, res) => {
       } else if (entry.changes[0].field === "feed") {
         // Receive feed update event
         let updateValueObject = entry.changes[0].value;
-        console.log("Update Value: " + updateValueObject);
+        for (const [key, value] of Object.entries(updateValueObject)) {
+          console.log(`${key}: ${value}`);
+        }
       }
     });
 
