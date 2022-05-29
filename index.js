@@ -203,6 +203,7 @@ function callSendAPI(senderPsid, response) {
 }
 
 function printObjectFields(object) {
+  console.log("Object Fields:");
   for (const [key, value] of Object.entries(object)) {
     console.log(`${key}: ${value}`);
   }
