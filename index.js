@@ -54,6 +54,7 @@ app.post("/webhook", (req, res) => {
   if (body.object === "page") {
     // Iterates over each entry - there may be multiple if batched
     body.entry.forEach(function (entry) {
+      printObjectFields(entry);
       if (entry.messaging) {
         // RECEIVE MESSAGE EVENT
         // Gets the body of the webhook event
