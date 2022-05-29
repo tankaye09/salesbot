@@ -1,4 +1,5 @@
 "use strict";
+const fs = require("fs");
 
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
@@ -58,7 +59,9 @@ app.post("/webhook", (req, res) => {
       if (entry.messaging) {
         // RECEIVE MESSAGE EVENT
         // Gets the body of the webhook event
+        // pass this into JSON file
         let webhookEvent = entry.messaging[0];
+        updateJSON(webhookEvent);
         console.log(webhookEvent);
 
         // Get the sender PSID
@@ -139,8 +142,46 @@ function handleMessage(senderPsid, receivedMessage) {
   callSendAPI(senderPsid, response);
 }
 
+// // send to AI chatbot, store in file
+// function handleMessage2(senderPsid, receivedMessage) {
+//   let response;
+
+//   // Checks if the message contains text
+//   if (receivedMessage.text) {
+//     // open JSON file
+//     fs.write;
+
+//     const chatData = require("./chatdata.json");
+
+//     // update JSON file
+//   }
+//   if (receivedMessage.nlp) {
+//     const sentiment = firstTrait(receivedMessage.nlp, "wit$sentiment");
+//     console.log("Sentiment: ");
+//     printObjectFields(sentiment);
+//   }
+
+//   // Send the response message
+//   callSendAPI(senderPsid, response);
+// }
+
 function firstTrait(nlp, name) {
   return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
+}
+
+function updateJSON(object) {
+  jsonReader("./chatdata.json", (err, chatData) => {
+    if (err) {
+      console.log("Error reading file:", err);
+      return;
+    }
+    // increase customer order count by 1
+    chatData.append(object);
+    fs.writeFile("./chatdata.json", JSON.stringify(chatData), (err1) => {
+      if (err1) console.log("Error writing file:", err1);
+    });
+  });
+  console.log("chatData.json updated");
 }
 
 // Handles messaging_postbacks events
