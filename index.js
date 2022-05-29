@@ -169,6 +169,20 @@ function firstTrait(nlp, name) {
   return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
 }
 
+function jsonReader(filePath, cb) {
+  fs.readFile(filePath, (err, fileData) => {
+    if (err) {
+      return cb && cb(err);
+    }
+    try {
+      const object = JSON.parse(fileData);
+      return cb && cb(null, object);
+    } catch (err1) {
+      return cb && cb(err1);
+    }
+  });
+}
+
 function updateJSON(object) {
   jsonReader("./chatdata.json", (err, chatData) => {
     if (err) {
