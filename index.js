@@ -16,9 +16,31 @@ app.use(urlencoded({ extended: true }));
 // Parse application/json
 app.use(json());
 
+// connect to database
+const { Pool } = require("pg");
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
 // Respond with 'Hello World' when a GET request is made to the homepage
 app.get("/", function (_req, res) {
   res.send("Hello World");
+});
+
+app.get("/db", async (req, res) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query("SELECT * FROM test_table");
+    const results = { results: result ? result.rows : null };
+    res.render("pages/db", results);
+    client.release();
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
 });
 
 // Adds support for GET requests to our webhook
@@ -167,35 +189,6 @@ function handleMessage(senderPsid, receivedMessage) {
 
 function firstTrait(nlp, name) {
   return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
-}
-
-function jsonReader(filePath, cb) {
-  fs.readFile(filePath, (err, fileData) => {
-    if (err) {
-      return cb && cb(err);
-    }
-    try {
-      const object = JSON.parse(fileData);
-      return cb && cb(null, object);
-    } catch (err1) {
-      return cb && cb(err1);
-    }
-  });
-}
-
-function updateJSON(object) {
-  jsonReader("./chatdata.json", (err, chatData) => {
-    if (err) {
-      console.log("Error reading file:", err);
-      return;
-    }
-    // increase customer order count by 1
-    chatData.append(object);
-    fs.writeFile("./chatdata.json", JSON.stringify(chatData), (err1) => {
-      if (err1) console.log("Error writing file:", err1);
-    });
-  });
-  console.log("chatData.json updated");
 }
 
 // Handles messaging_postbacks events
