@@ -23,7 +23,7 @@ app.get("/", function (_req, res) {
 });
 
 app.get("/db", async (req, res) => {
-  results = db.query("SELECT * FROM test_table");
+  const results = db.query("SELECT * FROM test_table");
   console.table(results.rows);
   res.send({ rows: results.rows });
 });
