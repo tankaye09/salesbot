@@ -1,5 +1,6 @@
 "use strict";
 const fs = require("fs");
+const db = require("./db");
 
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
@@ -16,34 +17,30 @@ app.use(urlencoded({ extended: true }));
 // Parse application/json
 app.use(json());
 
-// connect to database
-const { Pool } = require("pg");
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
-
 // Respond with 'Hello World' when a GET request is made to the homepage
 app.get("/", function (_req, res) {
   res.send("Hello World");
 });
 
 app.get("/db", async (req, res) => {
-  try {
-    const client = await pool.connect();
-    const result = await client.query("SELECT * FROM test_table");
-    const results = { results: result ? result.rows : null };
-    res.render("pages/db", results);
-    client.release();
-  } catch (err) {
-    console.error(err);
-    res.send("Error " + err);
-  }
+  const query = "SELECT * FROM test_table";
+  const result = db.query(query);
+  const results = { results: result ? result.rows : null };
+  res.json(results);
+
+  // try {
+  //   const client = await pool.connect();
+  //   const result = await client.query("SELECT * FROM test_table");
+  //   const results = { results: result ? result.rows : null };
+  //   res.render("pages/db", results);  // can't render without a renderer
+  //   client.release();
+  // } catch (err) {
+  //   console.error(err);
+  //   res.send("Error " + err);
+  // }
 });
 
-// Adds support for GET requests to our webhook
+// Adds support for GET requests to our webhooks
 app.get("/webhook", (req, res) => {
   // Your verify token. Should be a random string.
   const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
@@ -164,40 +161,10 @@ function handleMessage(senderPsid, receivedMessage) {
   callSendAPI(senderPsid, response);
 }
 
-// // send to AI chatbot, store in file
-// function handleMessage2(senderPsid, receivedMessage) {
-//   let response;
-
-//   // Checks if the message contains text
-//   if (receivedMessage.text) {
-//     // open JSON file
-//     fs.write;
-
-//     const chatData = require("./chatdata.json");
-
-//     // update JSON file
-//   }
-//   if (receivedMessage.nlp) {
-//     const sentiment = firstTrait(receivedMessage.nlp, "wit$sentiment");
-//     console.log("Sentiment: ");
-//     printObjectFields(sentiment);
-//   }
-
-//   // Send the response message
-//   callSendAPI(senderPsid, response);
-// }
-
 function firstTrait(nlp, name) {
   return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
 }
 
-// Handles messaging_postbacks events
-// Postback Buttons send a messaging_postbacks event to the webhook
-// {
-//  "type": "postback",
-//  "title": "<BUTTON_TEXT>",
-//  "payload": "<STRING_SENT_TO_WEBHOOK>"
-// }
 function handlePostback(senderPsid, receivedPostback) {
   let response;
 
