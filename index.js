@@ -22,12 +22,9 @@ app.get("/", function (_req, res) {
   res.send("Hello World");
 });
 
-app.get("/db", (req, res, next) => {
-  db.query("SELECT * FROM test_table", [req.params.id], (err, result) => {
-    if (err) {
-      return next(err);
-    }
-    res.send(result.rows[0]);
+app.get("/db", (req, res) => {
+  results = db.query("SELECT * FROM test_table")
+  console.table(results.rows)
   });
 
   // try {
