@@ -25,6 +25,7 @@ app.get("/", function (_req, res) {
 app.get("/db", (req, res) => {
   results = db.query("SELECT * FROM test_table")
   console.table(results.rows)
+  res.send({"rows": results.rows})
   });
 
   // try {
