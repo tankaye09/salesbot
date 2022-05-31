@@ -25,6 +25,7 @@ app.get("/", function (_req, res) {
 app.get("/db", async (req, res) => {
   const results = db.query("SELECT * FROM test_table");
   // console.table(results.rows);
+  console.log("Results: " + results);
   res.send(results);
 });
 
