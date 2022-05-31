@@ -9,6 +9,7 @@ const pool = new Pool({
 module.exports = {
   query: async (text) => {
     const results = await pool.query(text);
+    console.log(results);
     return results;
   },
 };
