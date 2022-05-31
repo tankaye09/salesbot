@@ -22,7 +22,7 @@ app.get("/", function (_req, res) {
   res.send("Hello World");
 });
 
-app.get("/db", (req, res) => {
+app.get("/db", async (req, res) => {
   results = db.query("SELECT * FROM test_table");
   console.table(results.rows);
   res.send({ rows: results.rows });

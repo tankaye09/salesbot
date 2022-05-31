@@ -7,7 +7,7 @@ const pool = new Pool({
 });
 
 module.exports = {
-  query: (text) => {
+  query: async (text) => {
     const results = await pool.query(text);
     return results;
   },
