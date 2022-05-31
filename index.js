@@ -23,21 +23,9 @@ app.get("/", function (_req, res) {
 });
 
 app.get("/db", (req, res) => {
-  results = db.query("SELECT * FROM test_table")
-  console.table(results.rows)
-  res.send({"rows": results.rows})
-  });
-
-  // try {
-  //   const client = await pool.connect();
-  //   const result = await client.query("SELECT * FROM test_table");
-  //   const results = { results: result ? result.rows : null };
-  //   res.render("pages/db", results);  // can't render without a renderer
-  //   client.release();
-  // } catch (err) {
-  //   console.error(err);
-  //   res.send("Error " + err);
-  // }
+  results = db.query("SELECT * FROM test_table");
+  console.table(results.rows);
+  res.send({ rows: results.rows });
 });
 
 // Adds support for GET requests to our webhooks
