@@ -7,14 +7,14 @@ const pool = new Pool({
 });
 module.exports = {
   query: (text, values) => {
-    const client = await pool.connect();
+    const client = pool.connect();
     client
-        .query(text, values)
-        .then(res => {
-        console.log(res.rows[0])
+      .query(text, values)
+      .then((res) => {
+        console.log(res.rows[0]);
         // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
-        return res
-        })
-        .catch(e => console.error(e.stack)) 
+        return res;
+      })
+      .catch((e) => console.error(e.stack));
   },
 };
