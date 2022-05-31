@@ -22,11 +22,13 @@ app.get("/", function (_req, res) {
   res.send("Hello World");
 });
 
-app.get("/db", async (req, res) => {
-  const query = "SELECT * FROM test_table";
-  const result = db.query(query);
-  const results = { results: result ? result.rows : null };
-  res.json(results);
+app.get("/db", (req, res, next) => {
+  db.query("SELECT * FROM test_table", [req.params.id], (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    res.send(result.rows[0]);
+  });
 
   // try {
   //   const client = await pool.connect();
