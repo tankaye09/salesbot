@@ -26,7 +26,7 @@ app.get("/db", async (req, res) => {
   const results = db.query("SELECT * FROM test_table");
   // console.table(results.rows);
   console.log("Results: " + results);
-  res.send(results);
+  res.send({ Results: results });
 });
 
 // Adds support for GET requests to our webhooks
