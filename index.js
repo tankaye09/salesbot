@@ -144,7 +144,7 @@ function handleMessage(senderPsid, receivedMessage) {
     // console.log("Sentiment: ");
     // printObjectFields(sentiment);
     const JSONstring = JSON.stringify(receivedMessage.nlp);
-    console.log(JSONstring);
+    console.log("NLP: " + JSONstring);
   }
 
   // Send the response message
