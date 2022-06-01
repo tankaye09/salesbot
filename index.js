@@ -27,7 +27,7 @@ app.get("/db", (req, res) => {
     if (err) {
       return next(err);
     }
-    res.send(result);
+    res.send(result.rows[0]);
   });
   // console.table(results.rows);
   // console.log("Results: " + results);
