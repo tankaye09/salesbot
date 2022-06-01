@@ -140,9 +140,11 @@ function handleMessage(senderPsid, receivedMessage) {
     };
   }
   if (receivedMessage.nlp) {
-    const sentiment = firstTrait(receivedMessage.nlp, "wit$sentiment");
-    console.log("Sentiment: ");
-    printObjectFields(sentiment);
+    // const sentiment = firstTrait(receivedMessage.nlp, "wit$sentiment");
+    // console.log("Sentiment: ");
+    // printObjectFields(sentiment);
+    const JSONstring = JSON.stringify(receivedMessage.nlp);
+    console.log(JSONstring);
   }
 
   // Send the response message
