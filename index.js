@@ -22,11 +22,16 @@ app.get("/", function (_req, res) {
   res.send("Hello World");
 });
 
-app.get("/db", async (req, res) => {
-  const results = await db.query("SELECT * FROM test_table");
+app.get("/db", (req, res) => {
+  const results = db.query("SELECT * FROM test_table", [], (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    res.send(result.rows[0]);
+  });
   // console.table(results.rows);
-  console.log("Results: " + results);
-  res.send({ Results: results });
+  // console.log("Results: " + results);
+  // res.send({ Results: results });
 });
 
 // Adds support for GET requests to our webhooks
@@ -96,6 +101,11 @@ app.post("/webhook", (req, res) => {
     res.sendStatus(404);
   }
 });
+
+// function sendToDB(jsonObj) {
+//   const query =
+//     "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp)VALUES(";
+// }
 
 // Handles messages events
 function handleMessage(senderPsid, receivedMessage) {
