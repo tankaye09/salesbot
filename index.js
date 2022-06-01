@@ -23,7 +23,7 @@ app.get("/", function (_req, res) {
 });
 
 app.get("/db", (req, res) => {
-  const results = db.query("SELECT * FROM test_table", [], (err, result) => {
+  db.query("SELECT * FROM test_table", [], (err, result) => {
     if (err) {
       return next(err);
     }
