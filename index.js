@@ -71,9 +71,9 @@ app.post("/webhook", (req, res) => {
       // printObjectFields(entry);
       if (entry.messaging) {
         // RECEIVE MESSAGE EVENT
-        // Gets the body of the webhook event
-        // pass this into JSON file
+        // store in db, async
         let webhookEvent = entry.messaging[0];
+        sendToDB(webhookEvent);
         console.log(webhookEvent);
 
         // Get the sender PSID
@@ -102,10 +102,40 @@ app.post("/webhook", (req, res) => {
   }
 });
 
-// function sendToDB(jsonObj) {
-//   const query =
-//     "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp)VALUES(";
-// }
+function sendToDB(jsonObj) {
+  const query =
+    "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp)VALUES( ?, ?, ?, ?) RETURNING";
+  var sender_id;
+  var recipient_id;
+  var NLP;
+  var text;
+  var timestamp;
+
+  sender_id = jsonObj.sender.id;
+  recipient_id = jsonObj.recipient.id;
+  if (jsonObj.message.NLP) {
+    NLP = jsonObj.message.NLP;
+  } else {
+    NLP = "";
+  }
+  if (jsonObj.message.text) {
+    NLP = jsonObj.message.text;
+  } else {
+    text = "";
+  }
+  timestamp = jsonObj.timestamp;
+  db.query(
+    query,
+    [sender_id, recipient_id, NLP, text, timestamp],
+    (err, res) => {
+      if (err) {
+        console.log(err.stack);
+      } else {
+        console.log(res.rows[0]);
+      }
+    }
+  );
+}
 
 // Handles messages events
 function handleMessage(senderPsid, receivedMessage) {
