@@ -113,12 +113,18 @@ function sendToDB(jsonObj) {
 
   sender_id = jsonObj.sender.id;
   recipient_id = jsonObj.recipient.id;
-  if (jsonObj.message.NLP) {
+  if (
+    jsonObj.hasownProperty(message) &&
+    jsonObj.message.hasOwnProperty("NLP")
+  ) {
     NLP = jsonObj.message.NLP;
   } else {
     NLP = "";
   }
-  if (jsonObj.message.text) {
+  if (
+    jsonObj.hasownProperty(message) &&
+    jsonObj.message.hasOwnProperty("text")
+  ) {
     text = jsonObj.message.text;
   } else {
     text = "";
