@@ -119,17 +119,18 @@ function sendToDB(jsonObj) {
     NLP = "";
   }
   if (jsonObj.message.text) {
-    NLP = jsonObj.message.text;
+    text = jsonObj.message.text;
   } else {
     text = "";
   }
   timestamp = jsonObj.timestamp;
+  console.log("params are: " + sender_id, recipient_id, NLP, text, timestamp);
   db.query(
     query,
     [sender_id, recipient_id, NLP, text, timestamp],
     (err, res) => {
       if (err) {
-        console.log(err.stack);
+        console.log("Error Inserting Row to DB: " + err.stack);
       } else {
         console.log(res.rows[0]);
       }
