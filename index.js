@@ -104,7 +104,7 @@ app.post("/webhook", (req, res) => {
 
 function sendToDB(jsonObj) {
   const query =
-    "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp)VALUES( ?, ?, ?, ?, ?) RETURNING *;";
+    "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp)VALUES(?, ?, ?, ?, ?) RETURNING *;";
   var sender_id;
   var recipient_id;
   var NLP;
