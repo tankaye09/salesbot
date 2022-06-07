@@ -8,7 +8,6 @@ const pool = new Pool({
 
 module.exports = {
   query: (text, params, callback) => {
-    const results = pool.query(text, params, callback);
-    return results;
+    return pool.query(text, params, callback);
   },
 };
