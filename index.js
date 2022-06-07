@@ -113,13 +113,14 @@ function sendToDB(jsonObj) {
 
   sender_id = jsonObj.sender.id;
   recipient_id = jsonObj.recipient.id;
+  // TODO: both text and NLP not found
   if (
     jsonObj.hasOwnProperty("message") &&
     jsonObj.message.hasOwnProperty("NLP")
   ) {
     NLP = jsonObj.message.NLP;
   } else {
-    NLP = "";
+    NLP = "nlptest";
   }
   if (
     jsonObj.hasOwnProperty("message") &&
@@ -127,7 +128,7 @@ function sendToDB(jsonObj) {
   ) {
     text = jsonObj.message.text;
   } else {
-    text = "";
+    text = "texttest";
   }
   timestamp = jsonObj.timestamp;
   console.log("params are: " + sender_id, recipient_id, NLP, text, timestamp);
