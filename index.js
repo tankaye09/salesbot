@@ -73,7 +73,6 @@ app.post("/webhook", (req, res) => {
         // RECEIVE MESSAGE EVENT
         // store in db, async
         let webhookEvent = entry.messaging[0];
-        sendToDB(webhookEvent);
         console.log(webhookEvent);
 
         // Get the sender PSID
@@ -84,6 +83,7 @@ app.post("/webhook", (req, res) => {
         // pass the event to the appropriate handler function
         if (webhookEvent.message) {
           handleMessage(senderPsid, webhookEvent.message);
+          sendToDB(webhookEvent);
         } else if (webhookEvent.postback) {
           handlePostback(senderPsid, webhookEvent.postback);
         }
