@@ -131,7 +131,21 @@ function sendToDB(jsonObj) {
     text = "texttest";
   }
   timestamp = jsonObj.timestamp;
-  console.log("params are: " + sender_id, recipient_id, NLP, text, timestamp);
+  console.log(
+    "params are: " + typeof sender_id,
+    typeof recipient_id,
+    typeof NLP,
+    typeof text,
+    typeof timestamp
+  );
+  console.log(
+    "param_types are: " + sender_id,
+    recipient_id,
+    NLP,
+    text,
+    timestamp
+  );
+
   db.query(
     query,
     [sender_id, recipient_id, NLP, text, timestamp],
