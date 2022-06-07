@@ -104,7 +104,7 @@ app.post("/webhook", (req, res) => {
 
 function sendToDB(jsonObj) {
   const query =
-    "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp)VALUES(?, ?, ?, ?, ?) RETURNING *;";
+    "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp) VALUES(?, ?, ?, ?, ?) RETURNING *;";
   var sender_id;
   var recipient_id;
   var NLP;
@@ -113,7 +113,6 @@ function sendToDB(jsonObj) {
 
   sender_id = jsonObj.sender.id;
   recipient_id = jsonObj.recipient.id;
-  // TODO: both text and NLP not found
   if (
     jsonObj.hasOwnProperty("message") &&
     jsonObj.message.hasOwnProperty("NLP")
@@ -146,17 +145,27 @@ function sendToDB(jsonObj) {
     timestamp
   );
 
-  db.query(
-    query,
-    [sender_id, recipient_id, NLP, text, timestamp],
-    (err, res) => {
-      if (err) {
-        console.log("Error Inserting Row to DB: " + err.stack);
-      } else {
-        console.log(res.rows[0]);
-      }
+  const test_query =
+    "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp)VALUES( '1', '1', 'nlptest', 'texttest', 1) RETURNING *;";
+  db.query(test_query, [], (err, res) => {
+    if (err) {
+      console.log("Error Inserting Row to DB: " + err.stack);
+    } else {
+      console.log(res.rows[0]);
     }
-  );
+  });
+
+  // db.query(
+  //   query,
+  //   [sender_id, recipient_id, NLP, text, timestamp],
+  //   (err, res) => {
+  //     if (err) {
+  //       console.log("Error Inserting Row to DB: " + err.stack);
+  //     } else {
+  //       console.log(res.rows[0]);
+  //     }
+  //   }
+  // );
 }
 
 // Handles messages events
