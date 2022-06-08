@@ -1,6 +1,16 @@
 {
     "poll": {
         "prompt1": "Hey John! 👋​\n\nThank you for liking our post! ❤️​  \n\n\n\nGuess if this is true or false! insurance company offered a cash reward to anyone who could capture the Loch Ness monster?  ​ ",
-        "reply1": "True 🟧🟧🟧🟧🟧🟧\n\nFalse 🟧🟧🟧 \n\nWould you like to try another poll?\n\nFeel free to ask any insurance or FWD-related questions and I would gladly answer them!"
+        "reply1": "True 🟧🟧🟧🟧🟧🟧 68%\n\nFalse 🟧🟧🟧 32% \n\nWould you like to try another poll?\n\nFeel free to ask any insurance or FWD-related questions and I would gladly answer them!"
+    },
+    "emoji_pictionary": {
+        "prompt1": "Hey John! 👋​ \n\nThank you for liking our post! ❤️​  \n\nCan you guess what the following emojis represent? Hint: FWD covers the following extreme sport in its travel insurance \n\n​💧​⛷️ ",
+        "correct": "That’s genius! Would you like to play another round of guessing? \n\nYou can also ask insurance or FWD-related questions and I would be glad to answer them. ",
+        "wrong": "Oops, that’s the wrong answer. Guess again by typing in the chat or click the button below to see the answer. ",
+        "giveup": "The correct answer is Water Skiing! Would you like to play another round of guessing? \n\nYou can also ask insurance or FWD-related questions and I would be glad to answer them. "
+    },
+    "reciprocity": {
+        "prompt1": "Hey John! 👋​ \n\nThank you for liking our post! ❤️​  \n\nType \"FWD cares\" to unveil a 20% promo code just for you!​ 😎",
+        "correct": "FWDGREATESTFAN​ \n\n\n\n*This promo code is only valid for purchases made on https://www.fwd.com.sg/ before 19 June 2022, 2359 hours. "
     }
 }

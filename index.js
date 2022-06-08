@@ -170,9 +170,32 @@ function handleMessage(senderPsid, receivedMessage) {
     // will be added to the body of your request to the Send API
     switch (receivedMessage.text) {
       case "TRUE":
+      case "true":
+      case "false":
       case "FALSE":
         response = {
           text: hooks.poll.reply1,
+        };
+        break;
+      case "water skiing":
+        response = {
+          text: hooks.emoji_pictionary.correct,
+        };
+        break;
+      case "surfing":
+      case "jetskiing":
+        response = {
+          text: hooks.emoji_pictionary.wrong,
+        };
+        break;
+      case "show me the answer":
+        response = {
+          text: hooks.emoji_pictionary.giveup,
+        };
+        break;
+      case "FWD cares":
+        response = {
+          text: hooks.reciprocity.correct,
         };
         break;
       default:
