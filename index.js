@@ -174,6 +174,7 @@ function handleMessage(senderPsid, receivedMessage) {
         response = {
           text: hooks.poll.reply1,
         };
+        break;
       default:
         response = {
           text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
