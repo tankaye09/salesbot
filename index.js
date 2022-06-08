@@ -1,6 +1,7 @@
 "use strict";
 const fs = require("fs");
 const db = require("./db");
+const hooks = require("./hooks.json");
 
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
@@ -102,6 +103,7 @@ app.post("/webhook", (req, res) => {
   }
 });
 
+// Database insert function
 function sendToDB(jsonObj) {
   const query =
     "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp) VALUES($1, $2, $3, $4, $5) RETURNING *;";
@@ -145,16 +147,6 @@ function sendToDB(jsonObj) {
     timestamp
   );
 
-  // const test_query =
-  //   "INSERT INTO chat_data(sender_id, recipient_id, NLP, text, timestamp)VALUES( '1', '1', 'nlptest', 'texttest', 1) RETURNING *;";
-  // db.query(test_query, [], (err, res) => {
-  //   if (err) {
-  //     console.log("Error Inserting Row to DB: " + err.stack);
-  //   } else {
-  //     console.log(res.rows[0]);
-  //   }
-  // });
-
   db.query(
     query,
     [sender_id, recipient_id, NLP, text, timestamp],
@@ -176,9 +168,17 @@ function handleMessage(senderPsid, receivedMessage) {
   if (receivedMessage.text) {
     // Create the payload for a basic text message, which
     // will be added to the body of your request to the Send API
-    response = {
-      text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
-    };
+    switch (receivedMessage.text) {
+      case "TRUE":
+      case "FALSE":
+        response = {
+          text: hooks.poll.reply1,
+        };
+      default:
+        response = {
+          text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
+        };
+    }
   } else if (receivedMessage.attachments) {
     // Get the URL of the message attachment
     let attachmentUrl = receivedMessage.attachments[0].payload.url;
@@ -222,9 +222,9 @@ function handleMessage(senderPsid, receivedMessage) {
   callSendAPI(senderPsid, response);
 }
 
-function firstTrait(nlp, name) {
-  return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
-}
+// function firstTrait(nlp, name) {
+//   return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
+// }
 
 function handlePostback(senderPsid, receivedPostback) {
   let response;
@@ -245,6 +245,7 @@ function handlePostback(senderPsid, receivedPostback) {
 function handleFeedUpdate(feedUpdateObject) {
   console.log("Feed Update: ");
   printObjectFields(feedUpdateObject);
+  // Hook flow
 }
 
 // Sends response messages via the Send API
