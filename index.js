@@ -119,7 +119,7 @@ function sendToDB(jsonObj) {
     jsonObj.hasOwnProperty("message") &&
     jsonObj.message.hasOwnProperty("NLP")
   ) {
-    NLP = jsonObj.message.NLP;
+    NLP = jsonObj.message.nlp;
   } else {
     NLP = "";
   }
