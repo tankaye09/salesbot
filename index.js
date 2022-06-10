@@ -3,6 +3,8 @@ const fs = require("fs");
 const db = require("./db");
 const hooks = require("./hooks.json");
 
+const active = False;
+
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
 
@@ -235,9 +237,6 @@ function handleMessage(senderPsid, receivedMessage) {
     };
   }
   if (receivedMessage.nlp) {
-    // const sentiment = firstTrait(receivedMessage.nlp, "wit$sentiment");
-    // console.log("Sentiment: ");
-    // printObjectFields(sentiment);
     const JSONstring = JSON.stringify(receivedMessage.nlp);
     console.log("NLP: " + JSONstring);
   }
@@ -245,10 +244,6 @@ function handleMessage(senderPsid, receivedMessage) {
   // Send the response message
   callSendAPI(senderPsid, response);
 }
-
-// function firstTrait(nlp, name) {
-//   return nlp && nlp.entities && nlp.traits[name] && nlp.traits[name][0];
-// }
 
 function handlePostback(senderPsid, receivedPostback) {
   let response;
@@ -274,6 +269,9 @@ function handleFeedUpdate(feedUpdateObject) {
 
 // Sends response messages via the Send API
 function callSendAPI(senderPsid, response) {
+  if (active == False) {
+    return;
+  }
   // The page access token we have generated in your app settings
   const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 
