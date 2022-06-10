@@ -117,7 +117,7 @@ function sendToDB(jsonObj) {
   recipient_id = jsonObj.recipient.id;
   if (
     jsonObj.hasOwnProperty("message") &&
-    jsonObj.message.hasOwnProperty("NLP")
+    jsonObj.message.hasOwnProperty("nlp")
   ) {
     NLP = jsonObj.message.nlp;
   } else {
