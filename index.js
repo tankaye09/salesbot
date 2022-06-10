@@ -3,7 +3,7 @@ const fs = require("fs");
 const db = require("./db");
 const hooks = require("./hooks.json");
 
-const active = False;
+const active = false;
 
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
@@ -269,7 +269,7 @@ function handleFeedUpdate(feedUpdateObject) {
 
 // Sends response messages via the Send API
 function callSendAPI(senderPsid, response) {
-  if (active == False) {
+  if (active == false) {
     return;
   }
   // The page access token we have generated in your app settings
