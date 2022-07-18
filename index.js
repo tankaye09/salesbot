@@ -310,7 +310,8 @@ function sendToRasa(senderPsid, msg) {
   let reply;
   // Construct the message body
   let requestBody = {
-    text: msg,
+    sender: senderPsid,
+    message: msg,
   };
 
   // Send the HTTP request to RASA endpoint
@@ -324,6 +325,8 @@ function sendToRasa(senderPsid, msg) {
     (err, _res, body) => {
       if (!err) {
         console.log("Message sent to RASA!");
+        console.log("Message: ", requestBody);
+
         reply = JSON.parse(body);
         console.log("Reply from RASA: " + reply);
       } else {
