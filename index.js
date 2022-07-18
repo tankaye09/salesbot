@@ -3,7 +3,7 @@ const fs = require("fs");
 const db = require("./db");
 const hooks = require("./hooks.json");
 
-const active = false;
+const active = true;
 
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
@@ -165,84 +165,88 @@ function sendToDB(jsonObj) {
 // Handles messages events
 function handleMessage(senderPsid, receivedMessage) {
   let response;
-
   // Checks if the message contains text
   if (receivedMessage.text) {
-    // Create the payload for a basic text message, which
-    // will be added to the body of your request to the Send API
-    switch (receivedMessage.text) {
-      case "TRUE":
-      case "true":
-      case "false":
-      case "FALSE":
-        response = {
-          text: hooks.poll.reply1,
-        };
-        break;
-      case "water skiing":
-        response = {
-          text: hooks.emoji_pictionary.correct,
-        };
-        break;
-      case "surfing":
-      case "jetskiing":
-        response = {
-          text: hooks.emoji_pictionary.wrong,
-        };
-        break;
-      case "show me the answer":
-        response = {
-          text: hooks.emoji_pictionary.giveup,
-        };
-        break;
-      case "FWD cares":
-        response = {
-          text: hooks.reciprocity.correct,
-        };
-        break;
-      default:
-        response = {
-          text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
-        };
-    }
-  } else if (receivedMessage.attachments) {
-    // Get the URL of the message attachment
-    let attachmentUrl = receivedMessage.attachments[0].payload.url;
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: "Is this the right picture?",
-              subtitle: "Tap a button to answer.",
-              image_url: attachmentUrl,
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Yes!",
-                  payload: "yes",
-                },
-                {
-                  type: "postback",
-                  title: "No!",
-                  payload: "no",
-                },
-              ],
-            },
-          ],
-        },
-      },
-    };
-  }
-  if (receivedMessage.nlp) {
-    const JSONstring = JSON.stringify(receivedMessage.nlp);
-    console.log("NLP: " + JSONstring);
+    sendToRasa(senderPsid, receivedMessage.text);
   }
 
-  // Send the response message
-  callSendAPI(senderPsid, response);
+  // // Checks if the message contains text
+  // if (receivedMessage.text) {
+  //   // Create the payload for a basic text message, which
+  //   // will be added to the body of your request to the Send API
+  //   switch (receivedMessage.text) {
+  //     case "TRUE":
+  //     case "true":
+  //     case "false":
+  //     case "FALSE":
+  //       response = {
+  //         text: hooks.poll.reply1,
+  //       };
+  //       break;
+  //     case "water skiing":
+  //       response = {
+  //         text: hooks.emoji_pictionary.correct,
+  //       };
+  //       break;
+  //     case "surfing":
+  //     case "jetskiing":
+  //       response = {
+  //         text: hooks.emoji_pictionary.wrong,
+  //       };
+  //       break;
+  //     case "show me the answer":
+  //       response = {
+  //         text: hooks.emoji_pictionary.giveup,
+  //       };
+  //       break;
+  //     case "FWD cares":
+  //       response = {
+  //         text: hooks.reciprocity.correct,
+  //       };
+  //       break;
+  //     default:
+  //       response = {
+  //         text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
+  //       };
+  //   }
+  // } else if (receivedMessage.attachments) {
+  //   // Get the URL of the message attachment
+  //   let attachmentUrl = receivedMessage.attachments[0].payload.url;
+  //   response = {
+  //     attachment: {
+  //       type: "template",
+  //       payload: {
+  //         template_type: "generic",
+  //         elements: [
+  //           {
+  //             title: "Is this the right picture?",
+  //             subtitle: "Tap a button to answer.",
+  //             image_url: attachmentUrl,
+  //             buttons: [
+  //               {
+  //                 type: "postback",
+  //                 title: "Yes!",
+  //                 payload: "yes",
+  //               },
+  //               {
+  //                 type: "postback",
+  //                 title: "No!",
+  //                 payload: "no",
+  //               },
+  //             ],
+  //           },
+  //         ],
+  //       },
+  //     },
+  //   };
+  // }
+  // if (receivedMessage.nlp) {
+  //   const JSONstring = JSON.stringify(receivedMessage.nlp);
+  //   console.log("NLP: " + JSONstring);
+  // }
+
+  // // Send the response message
+  // callSendAPI(senderPsid, response);
 }
 
 function handlePostback(senderPsid, receivedPostback) {
@@ -269,6 +273,7 @@ function handleFeedUpdate(feedUpdateObject) {
 
 // Sends response messages via the Send API
 function callSendAPI(senderPsid, response) {
+  // TOGGLE AUTO SEND MESSAGE
   if (active == false) {
     return;
   }
@@ -299,6 +304,35 @@ function callSendAPI(senderPsid, response) {
       }
     }
   );
+}
+
+function sendToRasa(senderPsid, msg) {
+  let reply;
+  // Construct the message body
+  let requestBody = {
+    text: msg,
+  };
+
+  // Send the HTTP request to RASA endpoint
+  request(
+    {
+      uri: "https://rasa-salesbot-v2.herokuapp.com/webhooks/rest/webhook",
+      // qs: { access_token: PAGE_ACCESS_TOKEN },
+      method: "POST",
+      json: requestBody,
+    },
+    (err, _res, body) => {
+      if (!err) {
+        console.log("Message sent to RASA!");
+        reply = JSON.parse(body);
+        console.log("Reply from RASA: " + reply);
+      } else {
+        console.error("Unable to send message to RASA:" + err);
+      }
+    }
+  );
+
+  // Send response from RASA to Messenger through HTTP request
 }
 
 function printObjectFields(object) {
