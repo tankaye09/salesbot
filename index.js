@@ -310,7 +310,7 @@ function sendToRasa(senderPsid, msg) {
   let reply;
   // Construct the message body
   let requestBody = {
-    sender: senderPsid,
+    sender: String(senderPsid),
     message: msg,
   };
 
@@ -325,7 +325,7 @@ function sendToRasa(senderPsid, msg) {
     (err, _res, body) => {
       if (!err) {
         console.log("Message sent to RASA!");
-        console.log("Message: ", requestBody);
+        printObjectFields(requestBody);
 
         reply = JSON.parse(body);
         console.log("Reply from RASA: " + reply);
