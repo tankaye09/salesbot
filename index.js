@@ -323,11 +323,11 @@ function sendToRasa(senderPsid, msg) {
       json: requestBody,
     },
     (err, _res, body) => {
-      if (!err) {
+      if (!err && response.statusCode == 200) {
         console.log("Message sent to RASA!");
         printObjectFields(requestBody);
 
-        reply = JSON.parse(body);
+        reply = JSON.stringify(JSON.parse(body));
         console.log("Reply from RASA: " + reply);
       } else {
         console.error("Unable to send message to RASA:" + err);
