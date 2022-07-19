@@ -307,7 +307,6 @@ function callSendAPI(senderPsid, response) {
 }
 
 function sendToRasa(senderPsid, msg) {
-  let reply;
   // Construct the message body
   let requestBody = {
     sender: String(senderPsid),
@@ -327,9 +326,8 @@ function sendToRasa(senderPsid, msg) {
         console.log("Message sent to RASA!");
         printObjectFields(requestBody);
 
-        // reply = JSON.stringify(JSON.parse(body));
-        reply = body;
-        console.log("Reply from RASA: " + reply);
+        // can contain more than one reply
+        body.forEach((reply, _) => callSendAPI(senderPsid, reply["text"]));
       } else {
         console.error("Unable to send message to RASA:" + err);
       }
