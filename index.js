@@ -322,8 +322,8 @@ function sendToRasa(senderPsid, msg) {
       method: "POST",
       json: requestBody,
     },
-    (err, _res, body) => {
-      if (!err && response.statusCode == 200) {
+    (err, res, body) => {
+      if (!err && res.statusCode == 200) {
         console.log("Message sent to RASA!");
         printObjectFields(requestBody);
 
