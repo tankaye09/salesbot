@@ -326,8 +326,6 @@ function sendToRasa(senderPsid, msg) {
         console.log("Message sent to RASA!");
         printObjectFields(requestBody);
 
-        senderID wrong?
-
         // can contain more than one reply
         body.forEach((reply, _) => callSendAPI(senderPsid, reply["text"]));
       } else {
