@@ -327,7 +327,8 @@ function sendToRasa(senderPsid, msg) {
         console.log("Message sent to RASA!");
         printObjectFields(requestBody);
 
-        reply = JSON.stringify(JSON.parse(body));
+        // reply = JSON.stringify(JSON.parse(body));
+        reply = body;
         console.log("Reply from RASA: " + reply);
       } else {
         console.error("Unable to send message to RASA:" + err);
