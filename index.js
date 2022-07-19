@@ -4,6 +4,8 @@ const db = require("./db");
 const hooks = require("./hooks.json");
 
 const active = true;
+// The page access token we have generated in your app settings
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
@@ -272,13 +274,11 @@ function handleFeedUpdate(feedUpdateObject) {
 }
 
 // Sends response messages via the Send API
-function callSendAPI(senderPsid, response) {
+async function callSendAPI(senderPsid, response) {
   // TOGGLE AUTO SEND MESSAGE
   if (active == false) {
     return;
   }
-  // The page access token we have generated in your app settings
-  const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 
   // Construct the message body
   let requestBody = {
@@ -288,7 +288,14 @@ function callSendAPI(senderPsid, response) {
     message: response,
   };
 
-  // Send the HTTP request to the Messenger Platform
+  await doRequest(requestBody)
+  console.log("Message sent to user");
+}
+
+// async-await wrapper for request library
+function doRequest(requestBody) {
+  return new Promise(function (resolve, reject) {
+      // Send the HTTP request to the Messenger Platform
   request(
     {
       uri: "https://graph.facebook.com/v2.6/me/messages",
@@ -298,12 +305,15 @@ function callSendAPI(senderPsid, response) {
     },
     (err, _res, _body) => {
       if (!err) {
-        console.log("Message sent!");
+        // console.log("Message sent!");
+        resolve(body);
       } else {
-        console.error("Unable to send message:" + err);
+        // console.error("Unable to send message:" + err);
+        reject(err);
       }
     }
   );
+  })
 }
 
 function sendToRasa(senderPsid, msg) {
@@ -328,7 +338,7 @@ function sendToRasa(senderPsid, msg) {
 
         // can contain more than one reply
         body.forEach((reply, _) =>
-          callSendAPI(senderPsid, { text: reply["text"] })
+          await callSendAPI(senderPsid, { text: reply["text"] })
         );
       } else {
         console.error("Unable to send message to RASA:" + err);
