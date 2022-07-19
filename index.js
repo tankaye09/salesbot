@@ -303,7 +303,7 @@ function doRequest(requestBody) {
         method: "POST",
         json: requestBody,
       },
-      (err, _res, _body) => {
+      (err, _res, body) => {
         if (!err) {
           // console.log("Message sent!");
           resolve(body);
