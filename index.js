@@ -166,87 +166,87 @@ function sendToDB(jsonObj) {
 function handleMessage(senderPsid, receivedMessage) {
   let response;
   // Checks if the message contains text
-  // if (receivedMessage.text) {
-  //   sendToRasa(senderPsid, receivedMessage.text);
-  // }
+  if (receivedMessage.text) {
+    sendToRasa(senderPsid, receivedMessage.text);
+  }
 
   // Checks if the message contains text
-  if (receivedMessage.text) {
-    // Create the payload for a basic text message, which
-    // will be added to the body of your request to the Send API
-    switch (receivedMessage.text) {
-      case "TRUE":
-      case "true":
-      case "false":
-      case "FALSE":
-        response = {
-          text: hooks.poll.reply1,
-        };
-        break;
-      case "water skiing":
-        response = {
-          text: hooks.emoji_pictionary.correct,
-        };
-        break;
-      case "surfing":
-      case "jetskiing":
-        response = {
-          text: hooks.emoji_pictionary.wrong,
-        };
-        break;
-      case "show me the answer":
-        response = {
-          text: hooks.emoji_pictionary.giveup,
-        };
-        break;
-      case "FWD cares":
-        response = {
-          text: hooks.reciprocity.correct,
-        };
-        break;
-      default:
-        response = {
-          text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
-        };
-    }
-  } else if (receivedMessage.attachments) {
-    // Get the URL of the message attachment
-    let attachmentUrl = receivedMessage.attachments[0].payload.url;
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: "Is this the right picture?",
-              subtitle: "Tap a button to answer.",
-              image_url: attachmentUrl,
-              buttons: [
-                {
-                  type: "postback",
-                  title: "Yes!",
-                  payload: "yes",
-                },
-                {
-                  type: "postback",
-                  title: "No!",
-                  payload: "no",
-                },
-              ],
-            },
-          ],
-        },
-      },
-    };
-  }
-  if (receivedMessage.nlp) {
-    const JSONstring = JSON.stringify(receivedMessage.nlp);
-    console.log("NLP: " + JSONstring);
-  }
+  // if (receivedMessage.text) {
+  //   // Create the payload for a basic text message, which
+  //   // will be added to the body of your request to the Send API
+  //   switch (receivedMessage.text) {
+  //     case "TRUE":
+  //     case "true":
+  //     case "false":
+  //     case "FALSE":
+  //       response = {
+  //         text: hooks.poll.reply1,
+  //       };
+  //       break;
+  //     case "water skiing":
+  //       response = {
+  //         text: hooks.emoji_pictionary.correct,
+  //       };
+  //       break;
+  //     case "surfing":
+  //     case "jetskiing":
+  //       response = {
+  //         text: hooks.emoji_pictionary.wrong,
+  //       };
+  //       break;
+  //     case "show me the answer":
+  //       response = {
+  //         text: hooks.emoji_pictionary.giveup,
+  //       };
+  //       break;
+  //     case "FWD cares":
+  //       response = {
+  //         text: hooks.reciprocity.correct,
+  //       };
+  //       break;
+  //     default:
+  //       response = {
+  //         text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
+  //       };
+  //   }
+  // } else if (receivedMessage.attachments) {
+  //   // Get the URL of the message attachment
+  //   let attachmentUrl = receivedMessage.attachments[0].payload.url;
+  //   response = {
+  //     attachment: {
+  //       type: "template",
+  //       payload: {
+  //         template_type: "generic",
+  //         elements: [
+  //           {
+  //             title: "Is this the right picture?",
+  //             subtitle: "Tap a button to answer.",
+  //             image_url: attachmentUrl,
+  //             buttons: [
+  //               {
+  //                 type: "postback",
+  //                 title: "Yes!",
+  //                 payload: "yes",
+  //               },
+  //               {
+  //                 type: "postback",
+  //                 title: "No!",
+  //                 payload: "no",
+  //               },
+  //             ],
+  //           },
+  //         ],
+  //       },
+  //     },
+  //   };
+  // }
+  // if (receivedMessage.nlp) {
+  //   const JSONstring = JSON.stringify(receivedMessage.nlp);
+  //   console.log("NLP: " + JSONstring);
+  // }
 
-  // Send the response message
-  callSendAPI(senderPsid, response);
+  // // Send the response message
+  // callSendAPI(senderPsid, response);
 }
 
 function handlePostback(senderPsid, receivedPostback) {
@@ -327,7 +327,9 @@ function sendToRasa(senderPsid, msg) {
         printObjectFields(requestBody);
 
         // can contain more than one reply
-        body.forEach((reply, _) => callSendAPI(senderPsid, reply["text"]));
+        body.forEach((reply, _) =>
+          callSendAPI(senderPsid, { text: reply["text"] })
+        );
       } else {
         console.error("Unable to send message to RASA:" + err);
       }
