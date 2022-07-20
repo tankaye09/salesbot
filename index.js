@@ -295,7 +295,7 @@ async function callSendAPI(senderPsid, response) {
 }
 
 // async-await wrapper for request library
-function doRequest(requestBody) {
+async function doRequest(requestBody) {
   return new Promise(function (resolve, reject) {
     // Send the HTTP request to the Messenger Platform
     request(
@@ -341,7 +341,7 @@ function sendToRasa(senderPsid, msg) {
         // can contain more than one reply
         body.forEach((reply, _) => {
           console.log("Message " + reply["text"] + " received from RASA");
-          callSendAPI(senderPsid, { text: reply["text"] });
+          await callSendAPI(senderPsid, { text: reply["text"] });
         });
       } else {
         console.error("Unable to send message to RASA:" + err);
