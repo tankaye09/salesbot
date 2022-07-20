@@ -19,8 +19,8 @@ require("dotenv").config();
 
 // Imports dependencies and set up http server
 const express = require("express"),
-{ urlencoded, json } = require("body-parser"),
-app = express();
+  { urlencoded, json } = require("body-parser"),
+  app = express();
 
 // Parse application/x-www-form-urlencoded
 app.use(urlencoded({ extended: true }));
@@ -295,20 +295,22 @@ async function callSendAPI(senderPsid, response) {
   };
 
   try {
-    const response = await fetch("https://graph.facebook.com/v2.6/me/messages" + new URLSearchParams({
-      access_token: PAGE_ACCESS_TOKEN,
-    }), {
-      method: 'post',
-      body: JSON.stringify(requestBody),
-      headers: {'Content-Type': 'application/json'}
-    });
-    const data = await response.json()
-    console.log(JSON.stringify(data))
+    const response = await fetch(
+      "https://graph.facebook.com/v2.6/me/messages" +
+        new URLSearchParams({
+          access_token: PAGE_ACCESS_TOKEN,
+        }),
+      {
+        method: "post",
+        body: JSON.stringify(requestBody),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    const data = await response.json();
+    console.log(JSON.stringify(data));
   } catch (error) {
     console.log(error);
   }
-
-
 
   // request(
   //   {
@@ -377,7 +379,7 @@ async function sendToRasa(senderPsid, msg) {
   //   const data = await response.json()
   //   console.log(JSON.stringify(data))
   // } catch (error) {
-    
+
   // }
 
   // Send the HTTP request to RASA endpoint
@@ -396,7 +398,7 @@ async function sendToRasa(senderPsid, msg) {
         // can contain more than one reply
         for (const reply of body) {
           console.log("Message " + reply["text"] + " received from RASA");
-          await callSendAPI(senderPsid, { text: reply["text"] });
+          callSendAPI(senderPsid, { text: reply["text"] });
         }
         // body.forEach((reply, _) => {
         //   console.log("Message " + reply["text"] + " received from RASA");
