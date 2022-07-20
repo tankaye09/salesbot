@@ -297,11 +297,11 @@ async function callSendAPI(senderPsid, response) {
     },
     (err, _res, body) => {
       if (!err) {
-        // console.log("Message sent!");
-        resolve(body);
+        console.log("Response from RASA: " + JSON.stringify(body));
+        // resolve(body);
       } else {
-        // console.error("Unable to send message:" + err);
-        reject(err);
+        console.error("Unable to send message:" + err);
+        // reject(err);
       }
     }
   );
