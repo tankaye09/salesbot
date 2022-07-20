@@ -288,14 +288,15 @@ async function callSendAPI(senderPsid, response) {
     message: response,
   };
 
-  await doRequest(requestBody);
-  console.log(
-    "Message " + "'" + requestBody.message.text + "'" + " sent to user"
-  );
+  let res = await doRequest(requestBody);
+  console.log(JSON.stringify(res))
+  // console.log(
+  //   "Message " + "'" + requestBody.message.text + "'" + " sent to user"
+  // );
 }
 
 // async-await wrapper for request library
-async function doRequest(requestBody) {
+function doRequest(requestBody) {
   return new Promise(function (resolve, reject) {
     // Send the HTTP request to the Messenger Platform
     request(
