@@ -363,7 +363,7 @@ async function sendToRasa(senderPsid, msg) {
     const data = await response.json();
     console.log("Message sent to RASA!");
     console.log(JSON.stringify(data));
-    for (const reply of body) {
+    for (const reply of data) {
       console.log("Message " + reply["text"] + " received from RASA");
       callSendAPI(senderPsid, { text: reply["text"] });
     }
