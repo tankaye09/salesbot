@@ -289,7 +289,7 @@ async function callSendAPI(senderPsid, response) {
   };
 
   let res = await doRequest(requestBody);
-  console.log(JSON.stringify(res))
+  console.log(JSON.stringify(res));
   // console.log(
   //   "Message " + "'" + requestBody.message.text + "'" + " sent to user"
   // );
@@ -342,7 +342,7 @@ async function sendToRasa(senderPsid, msg) {
         // can contain more than one reply
         for (const reply of body) {
           console.log("Message " + reply["text"] + " received from RASA");
-          await callSendAPI(senderPsid, { text: reply["text"] });
+          callSendAPI(senderPsid, { text: reply["text"] });
         }
         // body.forEach((reply, _) => {
         //   console.log("Message " + reply["text"] + " received from RASA");
