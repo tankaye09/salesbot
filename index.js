@@ -341,7 +341,7 @@ function sendToRasa(senderPsid, msg) {
         // can contain more than one reply
         body.forEach((reply, _) => {
           console.log("Message " + reply["text"] + " received from RASA");
-          await callSendAPI(senderPsid, { text: reply["text"] });
+          callSendAPI(senderPsid, { text: reply["text"] });
         });
       } else {
         console.error("Unable to send message to RASA:" + err);
