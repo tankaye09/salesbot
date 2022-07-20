@@ -340,7 +340,7 @@ function sendToRasa(senderPsid, msg) {
 
         // can contain more than one reply
         body.forEach((reply, _) => {
-          console.log("Message " + reply + " received from RASA");
+          console.log("Message " + reply["text"] + " received from RASA");
           callSendAPI(senderPsid, { text: reply["text"] });
         });
       } else {
