@@ -2,7 +2,7 @@
 const fs = require("fs");
 const db = require("./db");
 const hooks = require("./hooks.json");
-require("node-fetch");
+import fetch from "node-fetch";
 
 const active = true;
 // The page access token we have generated in your app settings
