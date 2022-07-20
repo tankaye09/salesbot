@@ -288,36 +288,54 @@ async function callSendAPI(senderPsid, response) {
     message: response,
   };
 
-  let res = await doRequest(requestBody);
-  console.log(JSON.stringify(res));
+  request(
+    {
+      uri: "https://graph.facebook.com/v2.6/me/messages",
+      qs: { access_token: PAGE_ACCESS_TOKEN },
+      method: "POST",
+      json: requestBody,
+    },
+    (err, _res, body) => {
+      if (!err) {
+        // console.log("Message sent!");
+        resolve(body);
+      } else {
+        // console.error("Unable to send message:" + err);
+        reject(err);
+      }
+    }
+  );
+
+  // let res = await doRequest(requestBody);
+  // console.log(JSON.stringify(res));
   // console.log(
   //   "Message " + "'" + requestBody.message.text + "'" + " sent to user"
   // );
 }
 
 // async-await wrapper for request library
-function doRequest(requestBody) {
-  return new Promise(function (resolve, reject) {
-    // Send the HTTP request to the Messenger Platform
-    request(
-      {
-        uri: "https://graph.facebook.com/v2.6/me/messages",
-        qs: { access_token: PAGE_ACCESS_TOKEN },
-        method: "POST",
-        json: requestBody,
-      },
-      (err, _res, body) => {
-        if (!err) {
-          // console.log("Message sent!");
-          resolve(body);
-        } else {
-          // console.error("Unable to send message:" + err);
-          reject(err);
-        }
-      }
-    );
-  });
-}
+// function doRequest(requestBody) {
+//   return new Promise(function (resolve, reject) {
+//     // Send the HTTP request to the Messenger Platform
+//     request(
+//       {
+//         uri: "https://graph.facebook.com/v2.6/me/messages",
+//         qs: { access_token: PAGE_ACCESS_TOKEN },
+//         method: "POST",
+//         json: requestBody,
+//       },
+//       (err, _res, body) => {
+//         if (!err) {
+//           // console.log("Message sent!");
+//           resolve(body);
+//         } else {
+//           // console.error("Unable to send message:" + err);
+//           reject(err);
+//         }
+//       }
+//     );
+//   });
+// }
 
 async function sendToRasa(senderPsid, msg) {
   // Construct the message body
@@ -342,7 +360,7 @@ async function sendToRasa(senderPsid, msg) {
         // can contain more than one reply
         for (const reply of body) {
           console.log("Message " + reply["text"] + " received from RASA");
-          callSendAPI(senderPsid, { text: reply["text"] });
+          await callSendAPI(senderPsid, { text: reply["text"] });
         }
         // body.forEach((reply, _) => {
         //   console.log("Message " + reply["text"] + " received from RASA");
