@@ -274,7 +274,7 @@ function handleFeedUpdate(feedUpdateObject) {
 }
 
 // Sends response messages via the Send API
-function callSendAPI(senderPsid, response) {
+async function callSendAPI(senderPsid, response) {
   // TOGGLE AUTO SEND MESSAGE
   if (active == false) {
     return;
@@ -318,7 +318,7 @@ async function doRequest(requestBody) {
   });
 }
 
-function sendToRasa(senderPsid, msg) {
+async function sendToRasa(senderPsid, msg) {
   // Construct the message body
   let requestBody = {
     sender: String(senderPsid),
@@ -339,10 +339,14 @@ function sendToRasa(senderPsid, msg) {
         printObjectFields(requestBody);
 
         // can contain more than one reply
-        body.forEach((reply, _) => {
+        for (const reply of body) {
           console.log("Message " + reply["text"] + " received from RASA");
-          callSendAPI(senderPsid, { text: reply["text"] });
-        });
+          await callSendAPI(senderPsid, { text: reply["text"] });
+        }
+        // body.forEach((reply, _) => {
+        //   console.log("Message " + reply["text"] + " received from RASA");
+        //   callSendAPI(senderPsid, { text: reply["text"] });
+        // });
       } else {
         console.error("Unable to send message to RASA:" + err);
       }
