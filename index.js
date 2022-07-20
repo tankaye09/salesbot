@@ -2,6 +2,7 @@
 const fs = require("fs");
 const db = require("./db");
 const hooks = require("./hooks.json");
+import fetch from 'node-fetch'
 
 const active = true;
 // The page access token we have generated in your app settings
@@ -10,11 +11,16 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
 
+// // Imports dependencies and set up http server
+// const request = require("request"),
+//   express = require("express"),
+//   { urlencoded, json } = require("body-parser"),
+//   app = express();
+
 // Imports dependencies and set up http server
-const request = require("request"),
-  express = require("express"),
-  { urlencoded, json } = require("body-parser"),
-  app = express();
+const express = require("express"),
+{ urlencoded, json } = require("body-parser"),
+app = express();
 
 // Parse application/x-www-form-urlencoded
 app.use(urlencoded({ extended: true }));
@@ -288,23 +294,39 @@ async function callSendAPI(senderPsid, response) {
     message: response,
   };
 
-  request(
-    {
-      uri: "https://graph.facebook.com/v2.6/me/messages",
-      qs: { access_token: PAGE_ACCESS_TOKEN },
-      method: "POST",
-      json: requestBody,
-    },
-    (err, _res, body) => {
-      if (!err) {
-        console.log("Response from RASA: " + JSON.stringify(body));
-        // resolve(body);
-      } else {
-        console.error("Unable to send message:" + err);
-        // reject(err);
-      }
-    }
-  );
+  try {
+    const response = await fetch("https://graph.facebook.com/v2.6/me/messages" + new URLSearchParams({
+      access_token: PAGE_ACCESS_TOKEN,
+    }), {
+      method: 'post',
+      body: JSON.stringify(requestBody),
+      headers: {'Content-Type': 'application/json'}
+    });
+    const data = await response.json()
+    console.log(JSON.stringify(data))
+  } catch (error) {
+    console.log(error);
+  }
+
+
+
+  // request(
+  //   {
+  //     uri: "https://graph.facebook.com/v2.6/me/messages",
+  //     qs: { access_token: PAGE_ACCESS_TOKEN },
+  //     method: "POST",
+  //     json: requestBody,
+  //   },
+  //   (err, _res, body) => {
+  //     if (!err) {
+  //       console.log("Response from RASA: " + JSON.stringify(body));
+  //       // resolve(body);
+  //     } else {
+  //       console.error("Unable to send message:" + err);
+  //       // reject(err);
+  //     }
+  //   }
+  // );
 
   // let res = await doRequest(requestBody);
   // console.log(JSON.stringify(res));
@@ -343,6 +365,20 @@ async function sendToRasa(senderPsid, msg) {
     sender: String(senderPsid),
     message: msg,
   };
+
+  // try {
+  //   const response = await fetch("https://graph.facebook.com/v2.6/me/messages" + new URLSearchParams({
+  //     access_token: PAGE_ACCESS_TOKEN,
+  //   }), {
+  //     method: 'post',
+  //     body: JSON.stringify(requestBody),
+  //     headers: {'Content-Type': 'application/json'}
+  //   });
+  //   const data = await response.json()
+  //   console.log(JSON.stringify(data))
+  // } catch (error) {
+    
+  // }
 
   // Send the HTTP request to RASA endpoint
   request(
