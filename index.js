@@ -13,15 +13,9 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 require("dotenv").config();
 
 // Imports dependencies and set up http server
-const request = require("request"),
-  express = require("express"),
+const express = require("express"),
   { urlencoded, json } = require("body-parser"),
   app = express();
-
-// // Imports dependencies and set up http server
-// const express = require("express"),
-//   { urlencoded, json } = require("body-parser"),
-//   app = express();
 
 // Parse application/x-www-form-urlencoded
 app.use(urlencoded({ extended: true }));
@@ -312,37 +306,7 @@ async function callSendAPI(senderPsid, response) {
   } catch (error) {
     console.log(error);
   }
-
-  // let res = await doRequest(requestBody);
-  // console.log(JSON.stringify(res));
-  // console.log(
-  //   "Message " + "'" + requestBody.message.text + "'" + " sent to user"
-  // );
 }
-
-// async-await wrapper for request library
-// function doRequest(requestBody) {
-//   return new Promise(function (resolve, reject) {
-//     // Send the HTTP request to the Messenger Platform
-//     request(
-//       {
-//         uri: "https://graph.facebook.com/v2.6/me/messages",
-//         qs: { access_token: PAGE_ACCESS_TOKEN },
-//         method: "POST",
-//         json: requestBody,
-//       },
-//       (err, _res, body) => {
-//         if (!err) {
-//           // console.log("Message sent!");
-//           resolve(body);
-//         } else {
-//           // console.error("Unable to send message:" + err);
-//           reject(err);
-//         }
-//       }
-//     );
-//   });
-// }
 
 async function sendToRasa(senderPsid, msg) {
   // Construct the message body
@@ -365,39 +329,11 @@ async function sendToRasa(senderPsid, msg) {
     console.log(JSON.stringify(data));
     for (const reply of data) {
       console.log("Message " + reply["text"] + " received from RASA");
-      callSendAPI(senderPsid, { text: reply["text"] });
+      await callSendAPI(senderPsid, { text: reply["text"] });
     }
   } catch (error) {
     console.log(error);
   }
-
-  // // Send the HTTP request to RASA endpoint
-  // request(
-  //   {
-  //     uri: "https://rasa-salesbot-v2.herokuapp.com/webhooks/rest/webhook",
-  //     // qs: { access_token: PAGE_ACCESS_TOKEN },
-  //     method: "POST",
-  //     json: requestBody,
-  //   },
-  //   (err, res, body) => {
-  //     if (!err && res.statusCode == 200) {
-  //       console.log("Message sent to RASA!");
-  //       printObjectFields(requestBody);
-
-  //       // can contain more than one reply
-  //       for (const reply of body) {
-  //         console.log("Message " + reply["text"] + " received from RASA");
-  //         callSendAPI(senderPsid, { text: reply["text"] });
-  //       }
-  //       // body.forEach((reply, _) => {
-  //       //   console.log("Message " + reply["text"] + " received from RASA");
-  //       //   callSendAPI(senderPsid, { text: reply["text"] });
-  //       // });
-  //     } else {
-  //       console.error("Unable to send message to RASA:" + err);
-  //     }
-  //   }
-  // );
 }
 
 function printObjectFields(object) {
