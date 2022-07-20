@@ -12,16 +12,16 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
 
-// // Imports dependencies and set up http server
-// const request = require("request"),
-//   express = require("express"),
-//   { urlencoded, json } = require("body-parser"),
-//   app = express();
-
 // Imports dependencies and set up http server
-const express = require("express"),
+const request = require("request"),
+  express = require("express"),
   { urlencoded, json } = require("body-parser"),
   app = express();
+
+// // Imports dependencies and set up http server
+// const express = require("express"),
+//   { urlencoded, json } = require("body-parser"),
+//   app = express();
 
 // Parse application/x-www-form-urlencoded
 app.use(urlencoded({ extended: true }));
