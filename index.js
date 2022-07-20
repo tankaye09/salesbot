@@ -297,7 +297,7 @@ async function callSendAPI(senderPsid, response) {
 
   try {
     const response = await fetch(
-      "https://graph.facebook.com/v2.6/me/messages" +
+      "https://graph.facebook.com/v2.6/me/messages?" +
         new URLSearchParams({
           access_token: PAGE_ACCESS_TOKEN,
         }),
