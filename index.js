@@ -274,7 +274,7 @@ function handleFeedUpdate(feedUpdateObject) {
 }
 
 // Sends response messages via the Send API
-async function callSendAPI(senderPsid, response) {
+function callSendAPI(senderPsid, response) {
   // TOGGLE AUTO SEND MESSAGE
   if (active == false) {
     return;
