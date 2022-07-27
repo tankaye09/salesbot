@@ -10,7 +10,7 @@ const active = true;
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 
 // const RASA_ENDPOINT = "https://rasa-salesbot-v2.herokuapp.com/webhooks/rest/webhook"
-const RASA_ENDPOINT = "localhost:5005/webhooks/rest/webhook";
+const RASA_ENDPOINT = "http://localhost:5005/webhooks/rest/webhook";
 
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
