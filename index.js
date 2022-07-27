@@ -9,6 +9,9 @@ const active = true;
 // The page access token we have generated in your app settings
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 
+// const RASA_ENDPOINT = "https://rasa-salesbot-v2.herokuapp.com/webhooks/rest/webhook"
+const RASA_ENDPOINT = "localhost:5005/webhooks/rest/webhook";
+
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
 
@@ -316,14 +319,11 @@ async function sendToRasa(senderPsid, msg) {
   };
 
   try {
-    const response = await fetch(
-      "https://rasa-salesbot-v2.herokuapp.com/webhooks/rest/webhook",
-      {
-        method: "post",
-        body: JSON.stringify(requestBody),
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    const response = await fetch(RASA_ENDPOINT, {
+      method: "post",
+      body: JSON.stringify(requestBody),
+      headers: { "Content-Type": "application/json" },
+    });
     const data = await response.json();
     console.log("Message sent to RASA!");
     console.log(JSON.stringify(data));
