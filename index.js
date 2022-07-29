@@ -163,7 +163,7 @@ function sendToDB(jsonObj) {
       if (err) {
         console.log("Error Inserting Row to DB: " + err.stack);
       } else {
-        console.log(res.rows[0]);
+        console.log("Inserted Row to DB: " + res.rows[0]);
       }
     }
   );
