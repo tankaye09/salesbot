@@ -92,7 +92,7 @@ app.post("/webhook", (req, res) => {
         // Check if the event is a message or postback and
         // pass the event to the appropriate handler function
         if (webhookEvent.message) {
-          handleMessage(senderPsid, webhookEvent.message);
+          handleMessage(senderPsid, webhookEvent);
           sendToDB(webhookEvent);
         } else if (webhookEvent.postback) {
           handlePostback(senderPsid, webhookEvent.postback);
@@ -170,90 +170,11 @@ function sendToDB(jsonObj) {
 }
 
 // Handles messages events
-function handleMessage(senderPsid, receivedMessage) {
-  let response;
+function handleMessage(senderPsid, webhookEvent) {
   // Checks if the message contains text
-  if (receivedMessage.text) {
-    sendToRasa(senderPsid, receivedMessage.text);
+  if (webhookEvent.message.text) {
+    sendToRasa(senderPsid, webhookEvent);
   }
-
-  // Checks if the message contains text
-  // if (receivedMessage.text) {
-  //   // Create the payload for a basic text message, which
-  //   // will be added to the body of your request to the Send API
-  //   switch (receivedMessage.text) {
-  //     case "TRUE":
-  //     case "true":
-  //     case "false":
-  //     case "FALSE":
-  //       response = {
-  //         text: hooks.poll.reply1,
-  //       };
-  //       break;
-  //     case "water skiing":
-  //       response = {
-  //         text: hooks.emoji_pictionary.correct,
-  //       };
-  //       break;
-  //     case "surfing":
-  //     case "jetskiing":
-  //       response = {
-  //         text: hooks.emoji_pictionary.wrong,
-  //       };
-  //       break;
-  //     case "show me the answer":
-  //       response = {
-  //         text: hooks.emoji_pictionary.giveup,
-  //       };
-  //       break;
-  //     case "FWD cares":
-  //       response = {
-  //         text: hooks.reciprocity.correct,
-  //       };
-  //       break;
-  //     default:
-  //       response = {
-  //         text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
-  //       };
-  //   }
-  // } else if (receivedMessage.attachments) {
-  //   // Get the URL of the message attachment
-  //   let attachmentUrl = receivedMessage.attachments[0].payload.url;
-  //   response = {
-  //     attachment: {
-  //       type: "template",
-  //       payload: {
-  //         template_type: "generic",
-  //         elements: [
-  //           {
-  //             title: "Is this the right picture?",
-  //             subtitle: "Tap a button to answer.",
-  //             image_url: attachmentUrl,
-  //             buttons: [
-  //               {
-  //                 type: "postback",
-  //                 title: "Yes!",
-  //                 payload: "yes",
-  //               },
-  //               {
-  //                 type: "postback",
-  //                 title: "No!",
-  //                 payload: "no",
-  //               },
-  //             ],
-  //           },
-  //         ],
-  //       },
-  //     },
-  //   };
-  // }
-  // if (receivedMessage.nlp) {
-  //   const JSONstring = JSON.stringify(receivedMessage.nlp);
-  //   console.log("NLP: " + JSONstring);
-  // }
-
-  // // Send the response message
-  // callSendAPI(senderPsid, response);
 }
 
 function handlePostback(senderPsid, receivedPostback) {
@@ -312,7 +233,8 @@ async function callSendAPI(senderPsid, response) {
   }
 }
 
-async function sendToRasa(senderPsid, msg) {
+async function sendToRasa(senderPsid, webhookEvent) {
+  let msg = webhookEvent.message.text;
   // Construct the message body
   let requestBody = {
     sender: String(senderPsid),
@@ -331,6 +253,15 @@ async function sendToRasa(senderPsid, msg) {
     for (const reply of data) {
       console.log("Message " + reply["text"] + " received from RASA");
       await callSendAPI(senderPsid, { text: reply["text"] });
+
+      // record to DB when reply is received
+      let dbObject;
+      dbObject.sender_id = webhookEvent.recipient.id;
+      dbObject.recipient_id = senderPsid;
+      dbObject.NLP = webhookEvent.message.nlp;
+      dbObject.text = reply["text"];
+      dbObject.timestamp = webhookEvent.timestamp;
+      sendToDB(dbObject);
     }
   } catch (error) {
     console.log(error);
