@@ -256,10 +256,16 @@ async function sendToRasa(senderPsid, webhookEvent) {
 
       // record to DB when reply is received
       let dbObject = {
-        sender_id: null,
-        recipient_id: null,
-        NLP: null,
-        text: null,
+        sender: {
+          id: null,
+        },
+        recipient: {
+          id: null,
+        },
+        message: {
+          nlp: null,
+          text: null,
+        },
         timestamp: null,
       };
 
