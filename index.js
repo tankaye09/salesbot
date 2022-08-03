@@ -183,13 +183,14 @@ function handlePostback(senderPsid, receivedPostback) {
   // Get the payload for the postback
   let payload = receivedPostback.payload;
   console.log("payload: ", payload);
+  sendToRasa(senderPsid, receivedPostback);
 
-  // Set the response based on the postback payload
-  if (payload === "yes") {
-    response = { text: "Thanks!" };
-  } else if (payload === "no") {
-    response = { text: "Oops, try sending another image." };
-  }
+  // // Set the response based on the postback payload
+  // if (payload === "yes") {
+  //   response = { text: "Thanks!" };
+  // } else if (payload === "no") {
+  //   response = { text: "Oops, try sending another image." };
+  // }
   // Send the message to acknowledge the postback
   callSendAPI(senderPsid, response);
 }
@@ -235,7 +236,12 @@ async function callSendAPI(senderPsid, response) {
 }
 
 async function sendToRasa(senderPsid, webhookEvent) {
-  let msg = webhookEvent.message.text;
+  let msg;
+  if ("message" in webhookEvent) {
+    msg = webhookEvent.message.text;
+  } else if ("payload" in webhookEvent) {
+    msg = webhookEvent.payload;
+  }
   // Construct the message body
   let requestBody = {
     sender: String(senderPsid),
