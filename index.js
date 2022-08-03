@@ -252,12 +252,12 @@ async function sendToRasa(senderPsid, webhookEvent) {
     console.log(JSON.stringify(data));
     for (const reply of data) {
       // check if button
-      if ("button" in reply) {
-        console.log("Button " + reply["button"] + " received from RASA");
+      if ("buttons" in reply) {
+        console.log("Button " + reply["buttons"] + " received from RASA");
         // if more than 3 buttons create quick reply object to pass to Messenger API
-        if (reply["button"].length > 3) {
+        if (reply["buttons"].length > 3) {
           let quick_replies = [];
-          reply["button"].forEach(function (buttonObj) {
+          reply["buttons"].forEach(function (buttonObj) {
             const quickReplyObj = {
               content_type: "text",
               title: buttonObj["title"],
@@ -271,7 +271,7 @@ async function sendToRasa(senderPsid, webhookEvent) {
           });
         } else {
           let buttons = [];
-          reply["button"].forEach(function (buttonObj) {
+          reply["buttons"].forEach(function (buttonObj) {
             const messengerButtonObj = {
               type: "postback",
               title: buttonObj["title"],
