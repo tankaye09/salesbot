@@ -251,8 +251,67 @@ async function sendToRasa(senderPsid, webhookEvent) {
     console.log("Message sent to RASA!");
     console.log(JSON.stringify(data));
     for (const reply of data) {
-      console.log("Message " + reply["text"] + " received from RASA");
-      await callSendAPI(senderPsid, { text: reply["text"] });
+      // check if button
+      if ("button" in reply) {
+        console.log("Button " + reply["button"] + " received from RASA");
+        // if more than 3 buttons create quick reply object to pass to Messenger API
+        if (reply["button"].length > 3) {
+          let quick_replies = [];
+          reply["button"].forEach(function (buttonObj) {
+            const quickReplyObj = {
+              content_type: "text",
+              title: buttonObj["title"],
+              payload: buttonObj["payload"],
+            };
+            quick_replies.push(quickReplyObj);
+          });
+          await callSendAPI(senderPsid, {
+            text: reply["text"],
+            quick_replies: quick_replies,
+          });
+        } else {
+          let buttons = [];
+          reply["button"].forEach(function (buttonObj) {
+            const messengerButtonObj = {
+              type: "postback",
+              title: buttonObj["title"],
+              payload: buttonObj["payload"],
+            };
+            buttons.push(messengerButtonObj);
+          });
+          await callSendAPI(senderPsid, {
+            attachment: {
+              type: "template",
+              payload: {
+                template_type: "button",
+                text: reply["text"],
+                buttons: buttons,
+              },
+            },
+          });
+        }
+        // create button object to pass to Messenger API
+
+        // await callSendAPIButton(senderPsid,
+        //   {
+        //    attachment: {
+        //     type: "template",
+        //     payload: {
+        //       template_type:"button",
+        //       text:"What do you want to do next?",
+        //       buttons:[
+        //         {
+        //           "type":"web_url",
+        //           "url":"https://www.messenger.com",
+        //           "title":"Visit Messenger"
+        //         },
+        //     }
+        //    }
+        //   });
+      } else if ("text" in reply) {
+        console.log("Message " + reply["text"] + " received from RASA");
+        await callSendAPI(senderPsid, { text: reply["text"] });
+      }
 
       // record to DB when reply is received
       let dbObject = {
