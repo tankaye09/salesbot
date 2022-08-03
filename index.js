@@ -241,6 +241,7 @@ async function sendToRasa(senderPsid, webhookEvent) {
     msg = webhookEvent.message.text;
   } else if ("payload" in webhookEvent) {
     msg = webhookEvent.payload;
+    console.log("Sending payload: ", msg);
   }
   // Construct the message body
   let requestBody = {
