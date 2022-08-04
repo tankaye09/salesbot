@@ -280,11 +280,18 @@ async function sendToRasa(senderPsid, webhookEvent) {
         } else {
           let buttons = [];
           reply["buttons"].forEach(function (buttonObj) {
-            const messengerButtonObj = {
+            // default button is postback
+            let messengerButtonObj = {
               type: "postback",
               title: buttonObj["title"],
               payload: buttonObj["payload"],
             };
+            // Check if button is url_button
+            if (messengerButtonObj["payload"].slice(0, 4) == "https") {
+              messengerButtonObj["type"] = "web_url";
+              messengerButtonObj["url"] = buttonObj["payload"];
+              delete messengerButtonObj.payload;
+            }
             buttons.push(messengerButtonObj);
           });
           await callSendAPI(senderPsid, {
