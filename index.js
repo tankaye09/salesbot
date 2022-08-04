@@ -292,6 +292,8 @@ async function sendToRasa(senderPsid, webhookEvent) {
         await callSendAPI(senderPsid, { text: reply["text"] });
       }
 
+      console.log("sending to DB");
+
       // record to DB when reply is received
       let dbObject = {
         sender: {
