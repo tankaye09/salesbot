@@ -171,11 +171,11 @@ function sendToDB(jsonObj) {
 // function handlePostback(senderPsid, webhookEvent) {
 //   let receivedPostback = webhookEvent.postback
 
-  // Get the payload for the postback
-  let payload = receivedPostback.payload;
-  console.log("payload: ", payload);
-  sendToRasa(senderPsid, webhookEvent);
-}
+//   // Get the payload for the postback
+//   let payload = receivedPostback.payload;
+//   console.log("payload: ", payload);
+//   sendToRasa(senderPsid, webhookEvent);
+// }
 
 function handleFeedUpdate(feedUpdateObject) {
   console.log("Feed Update: ");
