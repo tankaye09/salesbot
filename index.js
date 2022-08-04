@@ -239,8 +239,9 @@ async function sendToRasa(senderPsid, webhookEvent) {
     });
     const data = await response.json();
     console.log("Message sent to RASA!");
-    console.log(JSON.stringify(data));
+    console.log("Data: ", JSON.stringify(data));
     for (const reply of data) {
+      console.log("reply: ", reply);
       // check if button
       if ("buttons" in reply) {
         console.log("Button " + reply["buttons"] + " received from RASA");
