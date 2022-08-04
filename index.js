@@ -169,13 +169,13 @@ function handleMessage(senderPsid, webhookEvent) {
 }
 
 function handlePostback(senderPsid, receivedPostback) {
-  let response;
+  // let response;
 
   // Get the payload for the postback
   let payload = receivedPostback.payload;
   console.log("payload: ", payload);
   sendToRasa(senderPsid, receivedPostback);
-  callSendAPI(senderPsid, response);
+  // callSendAPI(senderPsid, response);
 }
 
 function handleFeedUpdate(feedUpdateObject) {
