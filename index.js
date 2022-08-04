@@ -309,7 +309,9 @@ async function sendToRasa(senderPsid, webhookEvent) {
 
       dbObject.sender.id = webhookEvent.recipient.id;
       dbObject.recipient.id = senderPsid;
-      dbObject.message.nlp = webhookEvent.message.nlp;
+      if ("nlp" in dbObject.message) {
+        dbObject.message.nlp = webhookEvent.message.nlp;
+      }
       dbObject.message.text = reply["text"];
       dbObject.timestamp = webhookEvent.timestamp;
       sendToDB(dbObject);
