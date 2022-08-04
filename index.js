@@ -8,10 +8,7 @@ const fetch = (...args) =>
 const active = true;
 // The page access token we have generated in your app settings
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
-// const RASA_ENDPOINT =
-//   "https://rasa-salesbot-v2.herokuapp.com/webhooks/rest/webhook";
-// const RASA_ENDPOINT = "http://localhost:5005/webhooks/rest/webhook";
-const RASA_ENDPOINT = process.env.NGROK_WEBHOOK + "/webhooks/rest/webhook";
+const RASA_ENDPOINT = process.env.WEBHOOK + "/webhooks/rest/webhook";
 
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
@@ -39,9 +36,6 @@ app.get("/db", (req, res) => {
     }
     res.send(result.rows[0]);
   });
-  // console.table(results.rows);
-  // console.log("Results: " + results);
-  // res.send({ Results: results });
 });
 
 // Adds support for GET requests to our webhooks
@@ -71,14 +65,11 @@ app.get("/webhook", (req, res) => {
 // Creates the endpoint for your webhook
 app.post("/webhook", (req, res) => {
   let body = req.body;
-  // console.log("REQ BODY: " + body);
-  // printObjectFields(body);
 
   // Checks if this is an event from a page subscription
   if (body.object === "page") {
     // Iterates over each entry - there may be multiple if batched
     body.entry.forEach(function (entry) {
-      // printObjectFields(entry);
       if (entry.messaging) {
         // RECEIVE MESSAGE EVENT
         // store in db, async
@@ -184,21 +175,12 @@ function handlePostback(senderPsid, receivedPostback) {
   let payload = receivedPostback.payload;
   console.log("payload: ", payload);
   sendToRasa(senderPsid, receivedPostback);
-
-  // // Set the response based on the postback payload
-  // if (payload === "yes") {
-  //   response = { text: "Thanks!" };
-  // } else if (payload === "no") {
-  //   response = { text: "Oops, try sending another image." };
-  // }
-  // Send the message to acknowledge the postback
   callSendAPI(senderPsid, response);
 }
 
 function handleFeedUpdate(feedUpdateObject) {
   console.log("Feed Update: ");
   printObjectFields(feedUpdateObject);
-  // Hook flow
 }
 
 // Sends response messages via the Send API
@@ -305,24 +287,6 @@ async function sendToRasa(senderPsid, webhookEvent) {
             },
           });
         }
-        // create button object to pass to Messenger API
-
-        // await callSendAPIButton(senderPsid,
-        //   {
-        //    attachment: {
-        //     type: "template",
-        //     payload: {
-        //       template_type:"button",
-        //       text:"What do you want to do next?",
-        //       buttons:[
-        //         {
-        //           "type":"web_url",
-        //           "url":"https://www.messenger.com",
-        //           "title":"Visit Messenger"
-        //         },
-        //     }
-        //    }
-        //   });
       } else if ("text" in reply) {
         console.log("Message " + reply["text"] + " received from RASA");
         await callSendAPI(senderPsid, { text: reply["text"] });
