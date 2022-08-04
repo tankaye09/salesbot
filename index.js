@@ -83,10 +83,10 @@ app.post("/webhook", (req, res) => {
         // Check if the event is a message or postback and
         // pass the event to the appropriate handler function
         if (webhookEvent.message) {
-          handleMessage(senderPsid, webhookEvent);
+          sendToRasa(senderPsid, webhookEvent);
           sendToDB(webhookEvent);
         } else if (webhookEvent.postback) {
-          handlePostback(senderPsid, webhookEvent.postback);
+          sendToRasa(senderPsid, webhookEvent);
         }
       } else if (entry.changes[0].field === "feed") {
         // RECEIVE FEED UPDATE EVENT
@@ -160,22 +160,21 @@ function sendToDB(jsonObj) {
   );
 }
 
-// Handles messages events
-function handleMessage(senderPsid, webhookEvent) {
-  // Checks if the message contains text
-  if (webhookEvent.message.text) {
-    sendToRasa(senderPsid, webhookEvent);
-  }
-}
+// // Handles messages events
+// function handleMessage(senderPsid, webhookEvent) {
+//   // Checks if the message contains text
+//   if (webhookEvent.message.text) {
+//     sendToRasa(senderPsid, webhookEvent);
+//   }
+// }
 
-function handlePostback(senderPsid, receivedPostback) {
-  // let response;
+// function handlePostback(senderPsid, webhookEvent) {
+//   let receivedPostback = webhookEvent.postback
 
   // Get the payload for the postback
   let payload = receivedPostback.payload;
   console.log("payload: ", payload);
-  sendToRasa(senderPsid, receivedPostback);
-  // callSendAPI(senderPsid, response);
+  sendToRasa(senderPsid, webhookEvent);
 }
 
 function handleFeedUpdate(feedUpdateObject) {
@@ -221,8 +220,8 @@ async function sendToRasa(senderPsid, webhookEvent) {
   let msg;
   if ("message" in webhookEvent) {
     msg = webhookEvent.message.text;
-  } else if ("payload" in webhookEvent) {
-    msg = webhookEvent.payload;
+  } else if ("payload" in webhookEvent.postback) {
+    msg = webhookEvent.postback.payload;
     console.log("Sending payload: ", msg);
   }
   // Construct the message body
