@@ -87,6 +87,7 @@ app.post("/webhook", (req, res) => {
           sendToDB(webhookEvent);
         } else if (webhookEvent.postback) {
           sendToRasa(senderPsid, webhookEvent);
+          sendToDB(webhookEvent);
         }
       } else if (entry.changes[0].field === "feed") {
         // RECEIVE FEED UPDATE EVENT
@@ -128,6 +129,11 @@ function sendToDB(jsonObj) {
     jsonObj.message.hasOwnProperty("text")
   ) {
     text = jsonObj.message.text;
+  } else if (
+    jsonObj.hasOwnProperty("postback") &&
+    jsonObj.postback.hasOwnProperty("payload")
+  ) {
+    text = jsonObj.postback.payload;
   } else {
     text = "";
   }
