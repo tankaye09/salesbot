@@ -80,19 +80,8 @@ app.post("/webhook", (req, res) => {
         let senderPsid = webhookEvent.sender.id;
         console.log("Sender PSID is: " + senderPsid);
 
-        // Check if the event is a message or postback and
-        // pass the event to the appropriate handler function
-        if (webhookEvent.message) {
-          sendToRasa(senderPsid, webhookEvent);
-          sendToDB(webhookEvent);
-        } else if (webhookEvent.postback) {
-          sendToRasa(senderPsid, webhookEvent);
-          sendToDB(webhookEvent);
-        }
-      } else if (entry.changes[0].field === "feed") {
-        // RECEIVE FEED UPDATE EVENT
-        let updateValueObject = entry.changes[0].value;
-        handleFeedUpdate(updateValueObject);
+        sendToDB(webhookEvent);
+        sendToRasa(senderPsid, webhookEvent);
       }
     });
 
@@ -164,28 +153,6 @@ function sendToDB(jsonObj) {
       }
     }
   );
-}
-
-// // Handles messages events
-// function handleMessage(senderPsid, webhookEvent) {
-//   // Checks if the message contains text
-//   if (webhookEvent.message.text) {
-//     sendToRasa(senderPsid, webhookEvent);
-//   }
-// }
-
-// function handlePostback(senderPsid, webhookEvent) {
-//   let receivedPostback = webhookEvent.postback
-
-//   // Get the payload for the postback
-//   let payload = receivedPostback.payload;
-//   console.log("payload: ", payload);
-//   sendToRasa(senderPsid, webhookEvent);
-// }
-
-function handleFeedUpdate(feedUpdateObject) {
-  console.log("Feed Update: ");
-  printObjectFields(feedUpdateObject);
 }
 
 // Sends response messages via the Send API
@@ -298,8 +265,6 @@ async function sendToRasa(senderPsid, webhookEvent) {
         await callSendAPI(senderPsid, { text: reply["text"] });
       }
 
-      console.log("sending to DB");
-
       // record to DB when reply is received
       let dbObject = {
         sender: {
@@ -328,13 +293,6 @@ async function sendToRasa(senderPsid, webhookEvent) {
     }
   } catch (error) {
     console.log(error);
-  }
-}
-
-function printObjectFields(object) {
-  console.log("Object Fields:");
-  for (const [key, value] of Object.entries(object)) {
-    console.log(`${key}: ${value}`);
   }
 }
 
