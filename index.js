@@ -269,7 +269,7 @@ async function sendToRasa(senderPsid, webhookEvent) {
               payload: buttonObj["payload"],
             };
             // Check if button is url_button
-            if (messengerButtonObj["payload"].slice(0, 4) == "https") {
+            if (messengerButtonObj["payload"].slice(0, 4) == "http") {
               console.log("I am a URL BUTTON");
               messengerButtonObj["type"] = "web_url";
               messengerButtonObj["url"] = buttonObj["payload"];
