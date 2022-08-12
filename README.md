@@ -2,6 +2,10 @@
 
 ## Download and install the Heroku CLI.
 
+https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli
+
+## Login
+
 If you haven't already, log in to your Heroku account and follow the prompts to create a new SSH public key.
 
     $ heroku login
@@ -23,7 +27,9 @@ Make some changes to the code you just cloned and deploy them to Heroku using Gi
 
 ## To view logs
 
-    $ heroku logs
+    $ heroku logs --tail
+
+# Local Testing
 
 ### To start webhook on localhost, run:
 
