@@ -29,6 +29,7 @@ app.get("/", function (_req, res) {
   res.send("Hello World");
 });
 
+// testing database
 app.get("/db", (req, res) => {
   db.query("SELECT * FROM test_table", [], (err, result) => {
     if (err) {
@@ -72,7 +73,6 @@ app.post("/webhook", (req, res) => {
     body.entry.forEach(function (entry) {
       if (entry.messaging) {
         // RECEIVE MESSAGE EVENT
-        // store in db, async
         let webhookEvent = entry.messaging[0];
         console.log(webhookEvent);
 
