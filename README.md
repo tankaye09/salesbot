@@ -1,3 +1,4 @@
+![title](./images/title.png)
 <h1 align="center">Capstone Chatbot</h1>
 
 ### Introduction
